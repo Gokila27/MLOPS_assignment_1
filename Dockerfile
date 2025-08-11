@@ -1,17 +1,20 @@
-# Use the official Python image as the base image
-FROM python:3.9-slim
+# Use an official Python image
+FROM python:3.10-slim
 
-# Set the working directory in the container
+# Set working directory
 WORKDIR /app
 
-# Copy the current directory contents into the container
-COPY . /app
+# Copy requirements file first (better caching)
+COPY requirements.txt .
 
-# Install the required Python packages
-RUN pip install --no-cache-dir flask numpy pickle-mixin
+# Install dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Expose the port that the Flask app runs on
+# Copy application code
+COPY . .
+
+# Expose Flask port
 EXPOSE 5000
 
-# Command to run the Flask app
+# Run Flask app
 CMD ["python", "flask_app.py"]
